@@ -6,7 +6,7 @@ import Link from "next/link";
 import { DrizzlePaper } from "@/lib/db/schema";
 // import { MessagesSquare } from "lucide-react";
 // import { auth } from "@clerk/nextjs";
-import { usePathname } from "next/navigation";
+import { redirect, usePathname } from "next/navigation";
 import { Button } from "./ui/button";
 import { UserAvatar } from "./User-Avatar";
 // import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
@@ -18,6 +18,7 @@ import { toast } from "react-hot-toast";
 import { Bot } from "lucide-react";
 import { KanbanSquareDashed } from "lucide-react";
 import { PencilLine } from "lucide-react";
+import { useUser } from "@clerk/nextjs";
 
 interface PaperProps {
   data: DrizzlePaper[];
@@ -26,6 +27,11 @@ interface PaperProps {
 export const Papers = ({ data }: PaperProps) => {
   const pathname = usePathname();
   const router = useRouter();
+  const { user } = useUser();
+
+  if (!user) {
+    return redirect("/sign-in");
+  }
 
   // function to check if the URL contains a certain string
   const urlContains = (keyword: string) => {
@@ -52,7 +58,9 @@ export const Papers = ({ data }: PaperProps) => {
 
   const handleClick = async (paper: DrizzlePaper) => {
     try {
-      const response = await axios.get(`/api/chats?paperId=${paper.id}`);
+      const response = await axios.get(
+        `/api/chats?paperId=${paper.id}&userId=${user.id}`
+      );
       if (response.data.chat) {
         // Chat exists, redirect to the chat page
         router.push(`/chat/${response.data.chat.id}`);
