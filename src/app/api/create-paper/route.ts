@@ -11,21 +11,31 @@ export const maxDuration = 60;
 
 export async function POST(req: Request, res: Response) {
   // const { userId } = await auth();
+  console.log("1");
   const user = await currentUser();
+  console.log("2");
 
   if (!user || !user.id) {
     return new NextResponse("Unauthorized", { status: 401 });
   }
+  console.log("3");
 
   try {
+    console.log("4");
     const body = await req.json();
+    console.log("5");
     const { file_key, file_name, paperTitle, description } = body;
+    console.log("6");
     const userName = `${user?.firstName} ${user?.lastName}`;
+    console.log("7");
     const userId = user?.id;
+    console.log("8");
 
     console.log(file_key, file_name);
+    console.log("9");
 
     await loadS3IntoPinecone(file_key);
+    console.log("10");
 
     const result = await db
       .insert(papers)
