@@ -7,7 +7,7 @@ import { getS3Url } from "@/lib/s3";
 import { auth, currentUser } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 
-// export const maxDuration = 60;
+export const maxDuration = 60;
 
 export async function POST(req: Request, res: Response) {
   // const { userId } = await auth();
