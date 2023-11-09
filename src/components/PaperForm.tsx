@@ -232,8 +232,8 @@ export const PaperForm = ({ initialData }: PaperFormProps) => {
                   />
                 </FormControl>
                 <FormDescription>
-                  Description for your paper. Please share why you think it's
-                  important or what your thoughts are as a reviwer
+                  Description for your paper. Please share why you think
+                  it&apos;s important or what your thoughts are as a reviwer
                 </FormDescription>
                 <FormMessage />
               </FormItem>
