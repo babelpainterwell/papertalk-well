@@ -17,7 +17,6 @@ import { Card, CardFooter, CardHeader, CardContent } from "./ui/card";
 import { toast } from "react-hot-toast";
 import { Bot } from "lucide-react";
 import { KanbanSquareDashed } from "lucide-react";
-import { FolderCog } from "lucide-react";
 import { PencilLine } from "lucide-react";
 
 interface PaperProps {
@@ -137,7 +136,7 @@ export const Papers = ({ data }: PaperProps) => {
             </div>
             <div className="flex items-center">
               <p className="lowercase me-1">@{item.userName}</p>
-              <UserAvatar />
+              {/* <UserAvatar /> */}
             </div>
           </CardFooter>
           {/* </Link> */}
