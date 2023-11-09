@@ -2,57 +2,91 @@ import { Button } from "@/components/ui/button";
 import { UserButton, auth } from "@clerk/nextjs";
 import Link from "next/link";
 import { ArrowRight, LogIn } from "lucide-react";
-import FileUpload from "@/components/FileUpload";
-import { db } from "@/lib/db";
-import { chats } from "@/lib/db/schema";
-import { eq } from "drizzle-orm";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+import { AtSign } from "lucide-react";
+import { Linkedin } from "lucide-react";
 
 export default async function Home() {
   const { userId } = await auth();
   const isAuth = !!userId;
-  let firstChat;
-  if (userId) {
-    firstChat = await db.select().from(chats).where(eq(chats.userId, userId));
-    if (firstChat) {
-      firstChat = firstChat[0];
-    }
-  }
+
   return (
-    <div className="w-screen min-h-screen bg-gradient-to-r from-rose-100 to-teal-100">
+    <div className="w-screen min-h-screen bg-gradient-to-tl from-white via-white to-white">
+      {/* <div className="absolute top-10 right-10 m-4">
+        <UserButton afterSignOutUrl="/" />
+      </div> */}
+      {/* Navigation bar */}
+      <nav className="flex justify-between items-center px-6 py-4">
+        <div className="flex items-center space-x-4 ms-3">
+          <a href="/" className="text-xl font-bold">
+            PaperTalk
+          </a>
+        </div>
+
+        <div className="flex items-center space-x-4 me-5">
+          <div className="hover:underline me-5">
+            <HoverCard>
+              <HoverCardTrigger>Builder Contact</HoverCardTrigger>
+              <HoverCardContent className="w-80 flex items-center">
+                <AtSign className="w-4 h-4 mr-2" />
+                <a
+                  href="https://www.linkedin.com/in/well-zhang/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:underline me-2"
+                >
+                  Zhongwei Zhang
+                </a>
+              </HoverCardContent>
+            </HoverCard>
+          </div>
+
+          <a
+            href="https://github.com/babelpainterwell/papertalk-well"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:underline me-5"
+          >
+            GitHub
+          </a>
+
+          {/* UserButton or Sign-in/Sign-up Links */}
+          <UserButton afterSignOutUrl="/" />
+        </div>
+      </nav>
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
         <div className="flex flex-col items-center text-center">
           <div className="flex items-center">
-            <h1 className="mr-3 text-5xl font-semibold">Chat with any PDF</h1>
-            <UserButton afterSignOutUrl="/" />
+            <h1 className="mr-3 text-5xl font-semibold">TALK TO YOUR PAPER</h1>
           </div>
-
-          <div className="flex mt-2">
-            {isAuth && firstChat && (
-              <>
-                <Link href={`/chat/${firstChat.id}`}>
-                  <Button>
-                    Go to Chats <ArrowRight className="ml-2" />
-                  </Button>
-                </Link>
-              </>
-            )}
-          </div>
-
-          <p className="max-w-xl mt-1 text-lg text-slate-600">
-            Join millions of students, researchers and professionals to
-            instantly answer questions and understand research with AI
-          </p>
 
           <div className="w-full mt-4">
             {isAuth ? (
-              <FileUpload />
-            ) : (
-              <Link href="/sign-in">
+              <Link href="/dashboard" className="me-3">
                 <Button>
-                  Login to get Started!
+                  Go to Dashboard
                   <LogIn className="w-4 h-4 ml-2" />
                 </Button>
               </Link>
+            ) : (
+              <>
+                <Link href="/sign-in" className="me-3">
+                  <Button>
+                    Login to get Started!
+                    <LogIn className="w-4 h-4 ml-2" />
+                  </Button>
+                </Link>
+                <Link href="/sign-up">
+                  <Button>
+                    Sign Up
+                    <LogIn className="w-4 h-4 ml-2" />
+                  </Button>
+                </Link>
+              </>
             )}
           </div>
         </div>

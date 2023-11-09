@@ -14,7 +14,7 @@ export async function getMatchesFromEmbeddings(
     const pineconeIndex = await client.index("papertalk");
     const namespace = pineconeIndex.namespace(convertToAscii(fileKey));
     const queryResult = await namespace.query({
-      topK: 5,
+      topK: 3,
       vector: embeddings,
       includeMetadata: true,
     });
@@ -44,5 +44,5 @@ export async function getContext(query: string, fileKey: string) {
 
   let docs = qualifyingDocs.map((match) => (match.metadata as Metadata).text);
   // 5 vectors
-  return docs.join("\n").substring(0, 3000);
+  return docs.join("\n\n").substring(0, 3000);
 }

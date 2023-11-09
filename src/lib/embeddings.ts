@@ -12,9 +12,9 @@ export async function getEmbeddings(text: string) {
       model: "text-embedding-ada-002",
       input: text.replace(/\n/g, " "),
     });
-    console.log("API Response Status:", response.status);
+    // console.log("API Response Status:", response.status);
     const result = await response.json();
-    console.log("API Response:", result);
+    // console.log("API Response:", result);
 
     if (result.error) {
       console.error("OpenAI API Error:", result.error);
