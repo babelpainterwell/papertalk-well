@@ -46,10 +46,10 @@ const ViewPaperPage = async ({ params: { paperId } }: Props) => {
       .where(eq(chats.paperId, currentPaper.id));
 
     const chatsId = _chats.map((chat) => chat.id);
-    if (chatsId.length === 0) {
-      console.error("No chats found for this paper.");
-      return redirect("/analytics");
-    }
+    // if (chatsId.length === 0) {
+    //   console.error("No chats found for this paper.");
+    //   return redirect("/analytics");
+    // }
 
     // Proceed with fetching messages if chats are found
     const _messages =

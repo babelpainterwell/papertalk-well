@@ -32,6 +32,7 @@ import toast from "react-hot-toast";
 import { useState } from "react";
 import axios from "axios";
 import Image from "next/image";
+import DownloadButton from "./DownloadButton";
 
 type AnalyticsProps = {
   messages: any[];
@@ -132,13 +133,19 @@ export const Analytics = ({
   return (
     <div className="relative max-h-screen overflow-scroll ms-3 me-3">
       <div className="sticky top-0 inset-x-0 p-2 bg-white h-fit">
-        <div className="ms-2">
-          <h3 className="text-lg font-medium">{paperTitle}</h3>
-          <p className="text-sm text-muted-foreground mb-2">
-            This paper has in total {messages.length} messages; You have left{" "}
-            {comments.length} comments;
-          </p>
+        <div className="ms-2 flex items-center justify-between">
+          <div>
+            <h3 className="text-lg font-medium">{paperTitle}</h3>
+            <p className="text-sm text-muted-foreground mb-2">
+              This paper has in total {messages.length} messages; You have left{" "}
+              {comments.length} comments;
+            </p>
+          </div>
+          <div className="me-3">
+            <DownloadButton messages={messages} comments={comments} />
+          </div>
         </div>
+
         <Separator className="bg-primary/10 mb-2" />
       </div>
 
