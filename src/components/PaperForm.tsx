@@ -246,13 +246,27 @@ export const PaperForm = ({ initialData }: PaperFormProps) => {
           <div className="w-full flex justify-center">
             <Button size="lg" disabled={isPending}>
               {isPending
-                ? [<StopCircle size={20} className="mr-3" />, " Creating ..."]
+                ? [
+                    <StopCircle size={20} key="stop-circle" className="mr-3" />,
+                    " Creating ...",
+                  ]
                 : initialData
                 ? [
-                    <FileSignature size={20} className="mr-3" />,
+                    <FileSignature
+                      key="file-signature"
+                      size={20}
+                      className="mr-3"
+                    />,
                     " Edit Your Paper",
                   ]
-                : [<UploadCloud size={20} className="mr-3" />, " Create Paper"]}
+                : [
+                    <UploadCloud
+                      key="upload-cloud"
+                      size={20}
+                      className="mr-3"
+                    />,
+                    " Create Paper",
+                  ]}
             </Button>
           </div>
         </form>
