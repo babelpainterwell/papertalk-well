@@ -36,4 +36,8 @@ Coming up...
 
 [chatpdf-yt]: Special thanks to Elliott Chong, whose project [chatpdf-yt] provided significant inspiration for structuring my own work. Additionally, some code snippets, including AWS S3 functionality and parsing for Pinecone functionality, were greatly influenced by his codes. More details can be found [here](https://github.com/elliott-chong/chatpdf-yt).
 
+## A Few More Words
+
+This project is designed as a MVP to test my idea, and as such, factors like latency and database optimization were not primary considerations during its development. If you see any areas for improvement that could enhance the user experience, please feel free to submit a pull request and share your contribution.
+
 # papertalk-well
