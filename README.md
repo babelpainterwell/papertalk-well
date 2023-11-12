@@ -4,7 +4,7 @@ PaperTalk is a tool created to demystify the complex terminology and concepts fo
 
 ## Motivation
 
-PaperTalk was created to solve a personal challenge I encountered as a self-taught beginner in deep learning. While reading seminal papers in the field, I often found it difficult to fully comprehend all the terminology and expressions used. This limited understanding prevented me from delving deeper into sub-fields and addressing the puzzles I encountered within these papers. To resolve this, I frequently Googled specific questions, like 'What is an attention head in the Transformer paper?' or asked ChatGPT, 'Are you familiar with the paper "Attention is All You Need"? Explain the attention head concept to me.' However, this approach made reading and comprehending papers time-consuming, and I often retained little information over time without accumulating answers to my confusions.
+PaperTalk was created to solve a personal challenge I encountered as a self-taught beginner in deep learning. While reading seminal papers in the field, I often found it difficult to fully comprehend all the terminology and expressions used. This limited understanding prevented me from delving deeper into sub-fields and addressing the puzzles I encountered within these papers. To resolve this, I tended to Google specific questions, like 'What is an attention head in the Transformer paper?' or asked ChatGPT, 'Are you familiar with the paper "Attention is All You Need"? Explain the attention head concept to me.' However, this approach made reading and comprehending papers time-consuming, and I often retained little information over time without accumulating answers to my confusions.
 
 To address this issue, I had this idea of creating PaperTalk a product that would streamline the process of resolving these puzzles. This tool would not only answer questions but also keep a record of the inquiries made about a specific paper. However, a significant drawback of large language models like GPT-4 and GPT-3.5 is their propensity for hallucination. Relying solely on such models to solve academic puzzles seemed inadequate. During development, I incorporated human instruction, allowing a human instructor to provide feedback on the model's outputs.
 
@@ -23,8 +23,6 @@ npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 ## More Build Details
 

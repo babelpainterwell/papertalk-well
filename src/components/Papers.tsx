@@ -19,6 +19,7 @@ import { Bot } from "lucide-react";
 import { KanbanSquareDashed } from "lucide-react";
 import { PencilLine } from "lucide-react";
 import { useUser } from "@clerk/nextjs";
+import { Badge } from "@/components/ui/badge";
 
 interface PaperProps {
   data: DrizzlePaper[];
@@ -91,40 +92,59 @@ export const Papers = ({ data }: PaperProps) => {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 pb-10">
+    <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 pb-10">
       {data.map((item) => (
         <Card
           key={item.id}
           // className="bg-primary/5 rounded-xl cursor-pointer hover:opacity-75 transition border-0 ms-3 me-3 mt-3 mb-3 min-h-[286px]"
-          className="flex flex-col h-full bg-primary/5 rounded-xl cursor-pointer hover:opacity-75 transition border-0 ms-3 me-3 mt-3 mb-3"
+          className="flex flex-col h-full bg-primary/5 rounded-xl cursor-pointer hover:opacity-75 transition border-0 ms-3 me-3 min-h-[350px]"
         >
-          {/* what href should be here? */}
-          {/* <Link href={`/paper/${item.id}`}> */}
-          <CardHeader className="flex items-center justify-center text-center text-muted-foreground">
-            <p className="font-bold">{item.paperTitle}</p>
+          <div className="mt-3 ms-3">
+            {/* <Badge className="bg-sky-300">@{item.userName}</Badge> */}
+            {urlContains("analytics") ? (
+              <Badge variant={"default"}>@{item.userName}</Badge>
+            ) : (
+              <Badge className="bg-sky-300">@{item.userName}</Badge>
+            )}
+          </div>
+          <CardHeader className="flex items-center text-center text-muted-foreground">
+            <div>
+              <p className="font-bold">{item.paperTitle}</p>
+            </div>
           </CardHeader>
           <CardContent className="flex-grow flex items-center justify-center text-center text-muted-foreground">
-            <p className="text-xs text-left">{item.description}</p>
-            {/* <CardSwiper
-                description={item.description}
-                abstract={item.abstract}
-              /> */}
+            <p className="text-xs text-left">
+              {item.description.length > 500
+                ? item.description.slice(0, 500) + "..."
+                : item.description}
+            </p>
           </CardContent>
 
           <CardFooter className="mt-auto flex items-center justify-between text-xs text-muted-foreground">
             <div>
+              {urlContains("analytics") ? (
+                <Link href={`paper/${item.id}`}>
+                  <Button variant="outline" className="ms-1 pl-3 pr-3">
+                    <PencilLine size={20} />
+                  </Button>
+                </Link>
+              ) : (
+                <></>
+              )}
+            </div>
+            <div>
               {/* Conditionally render the button based on URL */}
               {urlContains("analytics") && (
                 <div className="flex items-center">
+                  {/* <Link href={`paper/${item.id}`}>
+                    <Button variant="outline" className="ms-1 pl-3 pr-3">
+                      <PencilLine size={20} />
+                    </Button>
+                  </Link> */}
                   <Link href={`paper/${item.id}/view`}>
                     <Button variant="default">
                       <KanbanSquareDashed size={16} className="me-2" />
                       View Analytics
-                    </Button>
-                  </Link>
-                  <Link href={`paper/${item.id}`}>
-                    <Button variant="outline" className="ms-1 pl-3 pr-3">
-                      <PencilLine size={20} />
                     </Button>
                   </Link>
                 </div>
@@ -142,10 +162,10 @@ export const Papers = ({ data }: PaperProps) => {
                 </Button>
               )}
             </div>
-            <div className="flex items-center">
+            {/* <div className="flex items-center">
               <p className="lowercase me-1">@{item.userName}</p>
-              {/* <UserAvatar /> */}
-            </div>
+              
+            </div> */}
           </CardFooter>
           {/* </Link> */}
         </Card>

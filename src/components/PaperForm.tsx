@@ -7,6 +7,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { DrizzlePaper } from "@/lib/db/schema";
 import { toast } from "react-hot-toast";
+import { UploadCloud } from "lucide-react";
+import { StopCircle } from "lucide-react";
+import { FileSignature } from "lucide-react";
 
 import {
   Form,
@@ -137,7 +140,7 @@ export const PaperForm = ({ initialData }: PaperFormProps) => {
           {
             onSuccess: (data) => {
               toast.success("Paper created!");
-              router.push(`/paper/${data.paper_id}`);
+              router.push(`/paper/${data.paper_id}/view`);
             },
             onError: (err) => {
               toast.error("Error creating paper");
@@ -227,7 +230,7 @@ export const PaperForm = ({ initialData }: PaperFormProps) => {
                     disabled={uploading}
                     rows={7}
                     className="bg-background resize-none"
-                    placeholder={`Description for your paper and you can specify why this paper is important`}
+                    placeholder={`Description for your paper (500 characters max)`}
                     {...field}
                   />
                 </FormControl>
@@ -242,11 +245,14 @@ export const PaperForm = ({ initialData }: PaperFormProps) => {
 
           <div className="w-full flex justify-center">
             <Button size="lg" disabled={isPending}>
-              {initialData
-                ? "Edit your paper"
-                : isPending
-                ? "Creating..."
-                : "Create Paper"}
+              {isPending
+                ? [<StopCircle size={20} className="mr-3" />, " Creating ..."]
+                : initialData
+                ? [
+                    <FileSignature size={20} className="mr-3" />,
+                    " Edit Your Paper",
+                  ]
+                : [<UploadCloud size={20} className="mr-3" />, " Create Paper"]}
             </Button>
           </div>
         </form>
