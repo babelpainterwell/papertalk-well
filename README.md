@@ -10,6 +10,10 @@ To address this issue, I envisioned a product that would streamline the process 
 
 Why would a human instructor volunteer for this? To provide some context, the task of reading seminal deep learning papers is part of a deep learning course I am taking this fall semester. An incentive for the instructor to use this product is that it offers a way to provide asynchronous feedback to students' questions. Even if questions can't be answered immediately, the instructor can provide improved or corrected answers later. This dual approach of AI and human input is the foundation of PaperTalk's design and functionality.
 
+## Future Works
+
+Having seen the potential for individuals to accumulate knowledge by providing feedback to AI models, I am eager to delve deeper into finding ways to incentivize continuous human intelligence contributions, which could become a shortage especially as Large Language Models (LLMs) become more prevalent. To this end, I plan to leverage a distributed learning technique known as Federated Learning to explore its potential in achieving these goals. Updates will be added to my repository once completed.
+
 ## Getting Started
 
 First, run the development server:
