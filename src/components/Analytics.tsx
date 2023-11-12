@@ -112,23 +112,23 @@ export const Analytics = ({
     }
   };
 
-  if (messages.length === 0) {
-    return (
-      <div className="pt-10 flex flex-col items-center justify-center space-y-3">
-        <div className="relative w-60 h-60">
-          <Image
-            fill
-            className="grayscale"
-            src="/placeholder.svg"
-            alt="Empty"
-          />
-        </div>
-        <p className="text-sm text-muted-foreground">
-          No stats for this paper.
-        </p>
-      </div>
-    );
-  }
+  // if (messages.length === 0) {
+  //   return (
+  //     <div className="pt-10 flex flex-col items-center justify-center space-y-3">
+  //       <div className="relative w-60 h-60">
+  //         <Image
+  //           fill
+  //           className="grayscale"
+  //           src="/placeholder.svg"
+  //           alt="Empty"
+  //         />
+  //       </div>
+  //       <p className="text-sm text-muted-foreground">
+  //         No stats for this paper.
+  //       </p>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="relative max-h-screen overflow-scroll ms-3 me-3">
