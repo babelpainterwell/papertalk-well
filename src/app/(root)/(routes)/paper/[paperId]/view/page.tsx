@@ -107,7 +107,7 @@ const ViewPaperPage = async ({ params: { paperId } }: Props) => {
           {/* chat component */}
           <div className="flex-[7] border-l-4 border-l-slate-200">
             <Analytics
-              messages={_messages}
+              all_messages={_messages}
               comments={_comments}
               responses={_responses}
               paper={currentPaper}

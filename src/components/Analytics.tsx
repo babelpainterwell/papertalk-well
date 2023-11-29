@@ -11,43 +11,26 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { DrizzlePaper } from "@/lib/db/schema";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Wand2 } from "lucide-react";
-import { Textarea } from "./ui/textarea";
 import { redirect, useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { useState } from "react";
 import axios from "axios";
-import Image from "next/image";
 import DownloadButton from "./DownloadButton";
+import TableRowComponent from "./TableRowComponent";
 
 type AnalyticsProps = {
-  messages: any[];
+  all_messages: any[];
   comments: any[];
   responses: any[];
   paper: DrizzlePaper;
 };
 
 export const Analytics = ({
-  messages,
+  all_messages,
   comments,
   responses,
   paper,
 }: AnalyticsProps) => {
-  // console.log(comments);
   const router = useRouter();
 
   const onNavigate = (url: string) => {
@@ -58,7 +41,6 @@ export const Analytics = ({
   // const comment = `This is another test comment`;
 
   const [localComments, setLocalComments] = useState(comments);
-  const [commentContent, setCommentContent] = useState("");
 
   // Function to delete a comment
   const handleDelete = async (commentId: number) => {
@@ -112,24 +94,6 @@ export const Analytics = ({
     }
   };
 
-  // if (messages.length === 0) {
-  //   return (
-  //     <div className="pt-10 flex flex-col items-center justify-center space-y-3">
-  //       <div className="relative w-60 h-60">
-  //         <Image
-  //           fill
-  //           className="grayscale"
-  //           src="/placeholder.svg"
-  //           alt="Empty"
-  //         />
-  //       </div>
-  //       <p className="text-sm text-muted-foreground">
-  //         No stats for this paper.
-  //       </p>
-  //     </div>
-  //   );
-  // }
-
   return (
     <div className="relative max-h-screen overflow-scroll ms-3 me-3">
       <div className="sticky top-0 inset-x-0 p-2 bg-white h-fit">
@@ -137,12 +101,12 @@ export const Analytics = ({
           <div>
             <h3 className="text-lg font-medium">{paperTitle}</h3>
             <p className="text-sm text-muted-foreground mb-2">
-              This paper has in total {messages.length} messages; You have left{" "}
-              {comments.length} comments;
+              This paper has in total {all_messages.length} messages; You have
+              left {comments.length} comments;
             </p>
           </div>
           <div className="me-3">
-            <DownloadButton messages={messages} comments={comments} />
+            <DownloadButton messages={all_messages} comments={comments} />
           </div>
         </div>
 
@@ -166,7 +130,7 @@ export const Analytics = ({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {messages.map((message, index) => {
+          {all_messages.map((message, index) => {
             // Destructure the message object
             const { id, content, createdAt } = message;
             // Find the response for this message
@@ -182,126 +146,19 @@ export const Analytics = ({
             // Return JSX for each message
 
             return (
-              <TableRow key={id}>
-                <TableCell>
-                  <Checkbox checked={!!relatedComment} />
-                </TableCell>
-                <TableCell>{index + 1}</TableCell>
-                <TableCell className="font-medium">
-                  {relatedResponse?.userName}
-                </TableCell>
-                <TableCell>{content}</TableCell>
-                <TableCell>
-                  {relatedResponse
-                    ? relatedResponse.content
-                    : `Weird.. No model feedback is found`}
-                </TableCell>
-                <TableCell>{createdAt.toLocaleString()}</TableCell>
-                <TableCell className="text-muted-foreground min-w-[300px]">
-                  {relatedComment
-                    ? relatedComment.content
-                    : `You have not left any comment yet`}
-                </TableCell>
-                <TableCell className="min-w-[100px]">
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button className="w-18 h-8">
-                        Edit <Wand2 className="w-3 h-3 ml-1" />
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[800px]">
-                      <DialogHeader>
-                        <DialogTitle>Edit Comment</DialogTitle>
-                        <DialogDescription>
-                          Viewers will be able to see your comment
-                        </DialogDescription>
-                      </DialogHeader>
-                      <div className="grid gap-4 py-4">
-                        <div className="grid grid-cols-4  gap-4">
-                          <Label htmlFor="question" className="text-right">
-                            Question
-                          </Label>
-                          <Textarea
-                            id="question"
-                            defaultValue={content}
-                            className="col-span-3"
-                            disabled
-                            rows={3}
-                          />
-                        </div>
-                        <div className="grid grid-cols-4 gap-4">
-                          <Label htmlFor="model" className="text-right">
-                            Model Feedback
-                          </Label>
-                          <Textarea
-                            id="model"
-                            defaultValue={relatedResponse?.content}
-                            className="col-span-3"
-                            disabled
-                            rows={6}
-                          />
-                        </div>
-                        <div className="grid grid-cols-4 gap-4">
-                          <Label htmlFor="comment" className="text-right">
-                            Your Comment
-                          </Label>
-                          <Textarea
-                            id="comment"
-                            placeholder="Type your comment here"
-                            className="col-span-3"
-                            rows={6}
-                            onChange={(e) => setCommentContent(e.target.value)}
-                            defaultValue={relatedComment?.content}
-                          />
-                        </div>
-                      </div>
-
-                      <DialogFooter className="sm:justify-start">
-                        <DialogClose asChild>
-                          <Button
-                            type="button"
-                            variant="destructive"
-                            onClick={() => {
-                              if (!relatedComment) {
-                                toast.error(
-                                  "You have to create a comment first"
-                                );
-                              } else {
-                                handleDelete(relatedComment.id);
-                              }
-                            }}
-                          >
-                            Delete Comment
-                          </Button>
-                        </DialogClose>
-                        <DialogClose asChild>
-                          <Button type="button" variant="secondary">
-                            Cancel
-                          </Button>
-                        </DialogClose>
-                        <DialogClose asChild>
-                          <Button
-                            type="button"
-                            variant="default"
-                            onClick={() => {
-                              if (!relatedComment) {
-                                handleCreate(
-                                  commentContent,
-                                  relatedResponse.feedbackMessageId
-                                );
-                              } else {
-                                handleUpdate(relatedComment.id, commentContent);
-                              }
-                            }}
-                          >
-                            {!relatedComment ? "Add" : "Update"}
-                          </Button>
-                        </DialogClose>
-                      </DialogFooter>
-                    </DialogContent>
-                  </Dialog>
-                </TableCell>
-              </TableRow>
+              <TableRowComponent
+                paperTitle={paperTitle}
+                id={id}
+                key={id}
+                relatedComment={relatedComment}
+                index={index}
+                relatedResponse={relatedResponse}
+                content={content}
+                createdAt={createdAt}
+                handleDelete={handleDelete}
+                handleCreate={handleCreate}
+                handleUpdate={handleUpdate}
+              />
             );
           })}
         </TableBody>

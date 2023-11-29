@@ -76,3 +76,5 @@ export type DrizzleResponse = typeof responses.$inferSelect;
 
 // drizzle-orm
 // drizzle-kit
+
+// npx drizzle-kit studio
