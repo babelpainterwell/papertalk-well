@@ -106,7 +106,11 @@ export const Analytics = ({
             </p>
           </div>
           <div className="me-3">
-            <DownloadButton messages={all_messages} comments={comments} />
+            <DownloadButton
+              messages={all_messages}
+              comments={comments}
+              responses={responses}
+            />
           </div>
         </div>
 
@@ -123,9 +127,9 @@ export const Analytics = ({
             <TableHead>No.</TableHead>
             <TableHead className="w-[100px]">User Name</TableHead>
             <TableHead>Question</TableHead>
-            <TableHead>Model Feedback</TableHead>
+            <TableHead>Model Answer</TableHead>
             <TableHead>CreatedAt</TableHead>
-            <TableHead>Instructor Comment</TableHead>
+            <TableHead>Refined Answers</TableHead>
             <TableHead>Action</TableHead>
           </TableRow>
         </TableHeader>

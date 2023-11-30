@@ -113,20 +113,20 @@ const TableRowComponent = ({
       <TableCell className="text-muted-foreground min-w-[300px]">
         {relatedComment
           ? relatedComment.content
-          : `You have not left any comment yet`}
+          : `Click the button on the right to refine the model answer`}
       </TableCell>
       <TableCell className="min-w-[100px]">
         <Dialog>
           <DialogTrigger asChild>
             <Button className="w-18 h-8">
-              Edit <Wand2 className="w-3 h-3 ml-1" />
+              Refine <Wand2 className="w-3 h-3 ml-1" />
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[800px]">
             <DialogHeader>
-              <DialogTitle>Generate Your Feedback</DialogTitle>
+              <DialogTitle>Refine Model Answer</DialogTitle>
               <DialogDescription>
-                Viewers will be able to see your comment
+                Viewers will be able to see your refined answer
               </DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
@@ -144,7 +144,7 @@ const TableRowComponent = ({
               </div>
               <div className="grid grid-cols-4 gap-4 mt-2">
                 <Label htmlFor="model" className="text-right">
-                  Model Feedback
+                  Model Answer
                 </Label>
                 <Textarea
                   id="model"
@@ -161,14 +161,14 @@ const TableRowComponent = ({
               >
                 <div className="flex items-center justify-end">
                   <Button className="pr-0">
-                    Generate
+                    Refine
                     <Sparkles className="w-12" />
                   </Button>
                 </div>
                 {/* check if there is a given comment otherwise provide the model feedback to the chatbot */}
                 <Textarea
                   id="comment"
-                  placeholder="What are your thoughts on model's feedback? Let AI generate a comment for you! Or you can directly edit your comment below"
+                  placeholder="Give your suggestions on how to refine the model answer or update your previous refined answer. Note that you can directly edit the answer below"
                   className="col-span-3"
                   rows={3}
                   onChange={(e) => {
@@ -182,14 +182,14 @@ const TableRowComponent = ({
               <div className="grid mt-2 gap-4">
                 <Textarea
                   id="feedback"
-                  placeholder="AI generated comment will be shown here. You can also edit it directly."
+                  placeholder="AI generated refined will be shown here. You can also edit it directly."
                   className="col-span-3"
                   rows={8}
                   onChange={(e) => setCommentContent(e.target.value)}
                   value={commentContent}
                 />
                 <DialogDescription>
-                  Note that you can directly edit the generated comment above.
+                  Note that you can directly edit the refined answer above
                 </DialogDescription>
               </div>
             </div>
@@ -207,7 +207,7 @@ const TableRowComponent = ({
                     }
                   }}
                 >
-                  Delete Comment
+                  Delete Refined Answer
                 </Button>
               </DialogClose>
               <DialogClose asChild>

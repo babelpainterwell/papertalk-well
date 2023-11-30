@@ -6,9 +6,10 @@ import { Download } from "lucide-react";
 type Props = {
   messages: any[];
   comments: any[];
+  responses: any[];
 };
 
-const DownloadButton = ({ messages, comments }: Props) => {
+const DownloadButton = ({ messages, comments, responses }: Props) => {
   // comment.messageId is the id of the model feedback message that the comment is attached to
   //   console.log(comments.length);
   //   console.log(messages.length);
@@ -17,8 +18,14 @@ const DownloadButton = ({ messages, comments }: Props) => {
     acc[comment.messageId - 1] = comment.content;
     return acc;
   }, {});
-  //   console.log(Object.keys(commentsLookup));
+  const responsesLookup = responses.reduce((acc, response) => {
+    acc[response.messageId] = response.content;
+    return acc;
+  }, {});
+  // console.log(Object.keys(commentsLookup));
+  // console.log(messages);
   //   console.log(commentsLookup[88]);
+  // console.log("Responses Lookup:", responsesLookup);
 
   // Prepare the dataset for download
   const dataset = messages
@@ -26,10 +33,20 @@ const DownloadButton = ({ messages, comments }: Props) => {
       const { id, content } = message;
       // console.log(id);
       const commentContent = commentsLookup[id];
+      const responseContent = responsesLookup[id];
 
-      // If there is no commentContent, return null to indicate this entry should be filtered out.
-      if (!commentContent) {
+      // If there is no commentContent or responseContent, return null to filter it out.
+      if (commentContent === undefined && responseContent === undefined) {
         return null;
+      }
+
+      if (commentContent === undefined) {
+        return {
+          messages: [
+            { role: "user", content: content },
+            { role: "assistant", content: responseContent },
+          ],
+        };
       }
 
       return {

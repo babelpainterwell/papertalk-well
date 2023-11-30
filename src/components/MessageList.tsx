@@ -98,7 +98,7 @@ const MessageList = ({ messages, isLoading }: Props) => {
               {message.comment && (
                 <div className="rounded-lg px-3 text-sm py-1 shadow-md ring-1 ring-gray-900/10 bg-orange-200">
                   <p className="text-sm text-muted-foreground mb-1">
-                    Comment from instructor:{" "}
+                    Refined answer from the paper provider:{" "}
                     <div hidden>{message.comment.messageId}</div>
                   </p>
                   <p>{message.comment.content}</p>
