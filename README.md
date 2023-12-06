@@ -1,3 +1,7 @@
+## TRY MY PRODUCT!
+
+https://papertalk-well.vercel.app/
+
 ## Introduction
 
 PaperTalk is a tool created to demystify the complex terminology and concepts found in academic papers based on my personal needs while reading academic papers in the deep learning field. It combines LLM-supported explanations with feedbacks of human instructors, ensuring both immediate understanding and accurate, in-depth learning. I believe this product has strong extensibility, and its characteristic of fostering complementary interactions between AI and humans for asynchronous knowledge transfer can be applied to other fields without much burden.
@@ -9,6 +13,34 @@ PaperTalk was created to solve a personal challenge I encountered as a self-taug
 To address this issue, I had this idea of creating PaperTalk a product that would streamline the process of resolving these puzzles. This tool would not only answer questions but also keep a record of the inquiries made about a specific paper. However, a significant drawback of large language models like GPT-4 and GPT-3.5 is their propensity for hallucination. Relying solely on such models to solve academic puzzles seemed inadequate. During development, I incorporated human instruction, allowing a human instructor to provide feedback on the model's outputs.
 
 Why would a human instructor volunteer for this? To provide some context, the task of reading seminal deep learning papers is part of a deep learning course I am taking this fall semester. An incentive for the instructor to use this product is that it offers a way to provide asynchronous feedback to students' questions. Even if questions can't be answered immediately, the instructor can provide improved or corrected answers later. This dual approach of AI and human input is the foundation of PaperTalk's design and functionality.
+
+## Preview
+
+- **Home Page:** Discover a wide range of academic papers in the public square that may pique your interest or address your queries
+
+![Home Page](public/home_page.png)
+
+- **Chatting Page:** Engage with the AI to delve into the complexities of any paper and access comprehensive answers provided by expert contributors
+
+![Chatting Page](public/chatting_page.png)
+
+- **Analytics Page:** Explore the array of questions posed about your uploaded papers and gain insights into the topics of interest
+
+![Analytics Page](public/comments_page.png)
+
+- **Refine Answer Page;** Utilize AI assistance to craft detailed and precise responses to the questions asked about your papers
+
+![Refine Answer Page](public/refine_page.png)
+
+- **Chats Page:** Browse through your interactions and revisit conversations with various paper agents
+
+Chats Page
+
+![Chats Page](public/chat_page.png)
+
+- **Upload Page;** Contribute to the community by uploading your papers, assisting others who seek answers or insights related to your work
+
+![Upload Page](public/upload_page.png)
 
 ## Future Works
 
