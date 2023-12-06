@@ -1,8 +1,8 @@
 ## TRY MY PRODUCT!
 
-**You can check the Preview below under Motivation**
-
 https://papertalk-well.vercel.app/
+
+**You can check the Preview below under Motivation**
 
 ## Introduction
 
@@ -67,7 +67,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ## Acknowledgments
 
-[next13-ai-companion] by Antonio Erdeljac: My project utilized the existing UI structure shared by Antonio, including the sidebar and the navbar. The code can be found [here](https://github.com/AntonioErdeljac/next13-ai-companion).
+[next13-ai-companion] by Antonio Erdeljac: My project utilized the partial UI structure shared by Antonio, including the sidebar and the navbar. The code can be found [here](https://github.com/AntonioErdeljac/next13-ai-companion).
 
 [chatpdf-yt]: Special thanks to Elliott Chong, whose project [chatpdf-yt] provided significant inspiration for structuring my own work. Additionally, some code snippets, including AWS S3 functionality and parsing for Pinecone functionality, were greatly influenced by his codes. More details can be found [here](https://github.com/elliott-chong/chatpdf-yt).
 
