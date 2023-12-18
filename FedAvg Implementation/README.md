@@ -8,6 +8,8 @@ Federated learning has gained widespread use in healthcare sectors where data sh
 
 Yet, in recent years, we have not seen this technology adopted on a large scale, despite increasing societal concern for data privacy from both regulatory agencies and the public. One possible reason is that tech companies may lack the incentive to allow users to keep their data on local devices, as this data is a lucrative resource for them. **However, I am interested in investigating, from a technical standpoint, what factors are impeding the broader adoption of this technology.**
 
+[If the blog link above is deactivated, please try here!](https://658083081d85b8706f449284--polite-basbousa-74a8f4.netlify.app/)
+
 # Federated Averaging Code Implementation
 
 [Visit the Colab notebook](https://colab.research.google.com/drive/1LIyYtxJQ5UTt9A95EvAfDNyz_blUF9X5)
