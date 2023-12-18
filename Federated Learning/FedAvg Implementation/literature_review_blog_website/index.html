@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Federated Averaging</title>
+    <meta property="og:title" content="Federated Averaging" />
+    <meta name="twitter:title" content="Federated Averaging" />
+    <meta
+      name="description"
+      content="Your project about your cool topic described right here."
+    />
+    <meta
+      property="og:description"
+      content="Your project about your cool topic described right here."
+    />
+    <meta
+      name="twitter:description"
+      content="Your project about your cool topic described right here."
+    />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <!-- bootstrap for mobile-friendly layout -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+      integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      type="text/javascript"
+      async
+      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.0/es5/tex-mml-chtml.js"
+    ></script>
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700"
+      rel="stylesheet"
+    />
+    <link href="style.css" rel="stylesheet" />
+    <style>
+      .center-image {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      h2 {
+        margin-top: 20px;
+        margin-bottom: 18px;
+      }
+
+      h3 {
+        margin-top: 18px;
+        margin-bottom: 16px;
+      }
+
+      h4 {
+        margin-top: 16px;
+        margin-bottom: 14px;
+      }
+
+      h5 {
+        margin-top: 14px;
+        margin-bottom: 12px;
+      }
+    </style>
+  </head>
+  <body class="nd-docs">
+    <div class="nd-pageheader">
+      <div class="container">
+        <h1 class="lead">
+          <nobr class="widenobr">Federated Averaging</nobr>
+          <nobr class="widenobr">For CS 7150</nobr>
+        </h1>
+      </div>
+    </div>
+    <!-- end nd-pageheader -->
+
+    <div class="container">
+      <div class="row">
+        <div class="col justify-content-center text-center">
+          <h1>
+            An Analysis of [Communication-Efficient Learning of Deep Networks
+            from Decentralized Data]
+          </h1>
+          <h2 style="text-align: left">Motivation</h2>
+
+          <p style="text-align: left">
+            Federated learning has gained widespread use in healthcare sectors
+            where data sharing is often challenging due to concerns over user
+            privacy and data ownership. Without adequate techniques to utilize
+            these "isolated" data, we typically encounter data silos. Hospitals
+            are eager to leverage their data but lack the knowledge to do so
+            effectively. Introduced by Google in 2016,
+            <strong>
+              federated learning was designed to tackle this issue by adhering
+              to the core principle that only model gradients or weights, not
+              raw data, are exchanged among servers.</strong
+            >
+          </p>
+          <p style="text-align: left">
+            Yet, in recent years, we have not seen this technology adopted on a
+            large scale, despite increasing societal concern for data privacy
+            from both regulatory agencies and the public. One possible reason is
+            that tech companies may lack the incentive to allow users to keep
+            their data on local devices, as this data is a lucrative resource
+            for them.<strong>
+              However, we are interested in investigating, from a technical
+              standpoint, what factors are impeding the broader adoption of this
+              technology.</strong
+            >
+          </p>
+          <img src="FL1.png" alt="Federated Learning" style="width: 80%" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <hr style="margin-top: 50px; margin-bottom: 20px" />
+          <h2>Introduction</h2>
+          <p>
+            <strong
+              >Federated Learning is a distributed learning technique that
+              aggregates locally-computed updates to learn a shared model, doing
+              so without accessing local raw data, thus serving as a popular
+              technique for preserving privacy.</strong
+            >
+            Instead of all training happens on a central server, it's
+            distributed into multiple 'client' nodes. Distributed learning is
+            nothing new. Exploration in distributed training, specifically in
+            iteratively averaging locally trained models, has been extensively
+            studied and practically applied to the cluster/data setting.
+          </p>
+          <p>
+            Then, how is Federated Learning different?
+            <strong
+              >Unlike conventional distributed training, which often overlooks
+              privacy concerns, Federated Learning also distinguishes itself
+              through its unique environmental considerations.</strong
+            >
+            Consider a data cluster center, where we assume balanced (each
+            client node shares a similar size dataset) and IID (independent and
+            identically distributed) data input, along with fast networks of
+            high stability and synchronization. In the federated setting, we
+            usually deal with from dozens to millions of local datasets,
+            characterized by unbalanced, non-IID properties and
+            bandwidth-constrained networks.
+            <strong
+              >This shift in setting results in a transition of focus: from
+              computational costs in cluster settings to communication costs in
+              federated environments.</strong
+            >The Federated Averaging algorithm, introduced in this paper, serves
+            to leverage additional local computation in order to reduce the
+            number of communication rounds required for model training. It also
+            describes a method of weighted averaging aggregation for local
+            updates, as opposed to simple averaging.
+          </p>
+          <p>
+            How can we leverage more local computation to address the issue of
+            high communication costs? What is weighted average aggregation in
+            the federated learning setting, and what are its benefits compared
+            to simple averaging? With these questions in mind, let's dive into
+            the paper!
+          </p>
+
+          <hr style="margin-top: 50px; margin-bottom: 20px" />
+          <h2>Literature Review</h2>
+          <p>
+            The paper
+            <i
+              >Communication-Efficient Learning of Deep Networks from
+              Decentralized Data</i
+            >
+            is seminal in introducing federated learning. It outlines the
+            fundamental architecture of an FL system and an optimization
+            algorithm, <strong>FedAvg (Federated Averaging)</strong>, for
+            updating the global model on a central server based on local
+            gradients or weights updates from client servers. Although this work
+            primarily focuses on optimization properties within an FL setting
+            and offers limited discussion on practical issues that might arise
+            in real-world applications, we believe it provides an excellent
+            foundation for understanding the technology and setting the stage
+            for future research or practical applications.
+          </p>
+          <h3>The FedAvg Algorithm - Overview</h3>
+          <figure
+            style="
+              float: right;
+              width: 50%;
+              margin-left: 20px;
+              margin-bottom: 10px;
+              text-align: center;
+            "
+          >
+            <img src="FedSGD.png" alt="FedSGD" style="width: 100%" />
+
+            <figcaption>
+              To achieve comparable test accuracy, FedSGD requires an order of
+              magnitude more communication rounds compared to FedAvg.
+            </figcaption>
+          </figure>
+          <p>
+            The predominant optimization algorithm in use is Stochastic Gradient
+            Descent (SGD), which adapts well to federated optimization (FedSGD)
+            by processing a single batch gradient per communication round.
+            Although this method is computationally frugal, it necessitates a
+            substantial number of training rounds to develop robust models. For
+            example, advanced techniques like batch normalization required
+            50,000 iterations for the MNIST dataset with small minibatches.
+            <strong>
+              Given that communication is a costly resource in federated
+              learning, reducing the number of communication rounds is
+              imperative. This necessity distinguishes FedAvg from FedSGD:
+              FedAvg significantly curtails communication demand by aggregating
+              multiple local updates before transmitting them, whereas FedSGD
+              communicates after every batch, increasing the communication
+              overhead.
+            </strong>
+            This efficiency in reducing communication rounds makes FedAvg
+            particularly advantageous in federated settings.
+          </p>
+          <p>The key steps of <strong>FedAvg</strong> are as follows:</p>
+          <p>
+            $$ Loss Function: f(w) = \sum_{k=1}^{K} \frac{n_k}{n} F_k(w) \quad
+            \text{where} \quad F_k(w) = \frac{1}{n_k} \sum_{i \in P_k} f_i(w).
+            $$
+          </p>
+          <ul>
+            <li>
+              <b>Initialization:</b> A global model is initialized on a central
+              server.
+            </li>
+            <li>
+              <b>Local Training:</b> This global model is sent to a subset of
+              participating devices (clients). Each client trains the model on
+              their local data.
+            </li>
+            <li>
+              <b>Model Updating:</b> After local training, each client sends
+              their model updates (i.e., the weights of the trained model) back
+              to the server. Notably, the actual data remains on the client,
+              ensuring privacy.
+            </li>
+            <li>
+              <b>Aggregation:</b> The server aggregates these updates, typically
+              by weighted averaging the weights as the loss function shows, to
+              update the global model.
+            </li>
+            <li>
+              <b>Iteration:</b> Steps 2-4 are repeated for several rounds until
+              the model converges or meets certain performance criteria.
+            </li>
+          </ul>
+          <div style="display: flex; justify-content: center">
+            <img
+              src="FL2.png"
+              alt="Federated Learning"
+              style="width: 40%; margin: 20px"
+            />
+          </div>
+          <h5><b>Key Variables:</b></h5>
+          <ul>
+            <li>
+              <code>C</code>: The fraction of clients participating in each
+              training round.
+            </li>
+            <li><code>K</code>: The total number of clients.</li>
+            <li>
+              <code>B</code>: The local minibatch size for client updates.
+            </li>
+            <li>
+              <code>E</code>: The number of local epochs for client updates.
+            </li>
+            <li><code>&eta;</code>: The learning rate for gradient descent.</li>
+          </ul>
+          <p>More specifically,</p>
+          <h5><b>Server Executes:</b></h5>
+          <ol>
+            <li>
+              The server initializes the global model with parameters
+              <code>w_0</code>.
+            </li>
+            <li>
+              For each round <code>t</code>:
+              <ul>
+                <li>
+                  The server selects a subset <code>S_t</code> of
+                  <code>m</code> clients randomly from the total
+                  <code>K</code> clients. <code>C</code> is a fraction of the
+                  total number of clients.
+                </li>
+                <li>
+                  Each selected client <code>k</code> performs a
+                  <code>ClientUpdate</code> on the current global model
+                  <code>w_t</code>.
+                </li>
+                <li>
+                  The server computes <code>m_t</code>, the sum of the data
+                  points <code>n_k</code> from all selected clients.
+                </li>
+                <li>
+                  The server updates the global model to
+                  <code>w_{t+1}</code> using a weighted sum of the client
+                  updates, with weights proportional to their data points.
+                </li>
+              </ul>
+            </li>
+          </ol>
+
+          <h5><b>ClientUpdate:</b></h5>
+          <p>(Run on client <code>k</code>)</p>
+          <ol>
+            <li>
+              The client splits its local data <code>P_k</code> into batches of
+              size <code>B</code>.
+            </li>
+            <li>
+              For each local epoch <code>i</code> from 1 to <code>E</code>:
+              <ul>
+                <li>
+                  The client processes each batch <code>b</code> and updates the
+                  local model parameters <code>w</code> using gradient descent.
+                </li>
+                <li>
+                  After <code>E</code> epochs, the client returns the updated
+                  parameters <code>w</code> to the server.
+                </li>
+              </ul>
+            </li>
+          </ol>
+
+          <h3>Previous Related Works</h3>
+          <ul>
+            <li>
+              <strong>McDonald et al. (2010):</strong> Related to FedAvg by
+              introducing model averaging in distributed settings, but did not
+              account for federated learning's characteristic unbalanced and
+              non-IID data.
+            </li>
+            <li>
+              <strong>Povey et al. (2015):</strong> Utilized parameter averaging
+              in deep neural networks for speech recognition, sharing conceptual
+              ground with FedAvg's approach to model updates.
+            </li>
+            <li>
+              <strong>Shokri and Shmatikov (2015):</strong> Proposed a
+              privacy-preserving approach that aligns with FedAvg's goal to
+              reduce communication costs, although it did not address federated
+              learning's unique data challenges.
+            </li>
+            <li>
+              <strong>Dean et al. (2012):</strong> Explored large-scale
+              distributed deep networks training (using SGD, more details
+              below), which is relevant to FedAvg's scale, but FedAvg
+              specifically reduces the updates needed for federated contexts.
+            </li>
+          </ul>
+
+          <p>
+            <strong>Uniqueness of Federated Averaging Algorithm:</strong> FedAvg
+            aims to address the training on unbalanced and non-IID data
+            distributions across numerous clients. It is specifically designed
+            to optimize the trade-off between local computation and
+            communication efficiency. This optimization is critical in scenarios
+            where preserving data privacy, managing limited bandwidth, and
+            dealing with uneven data distribution are primary concerns.
+          </p>
+
+          <hr style="margin-top: 50px; margin-bottom: 20px" />
+          <h3>Experiements</h3>
+          <p>
+            Having understood the basics of FedAvg, including the meanings of
+            various variables in the algorithm such as B, E, C, and K, as well
+            as its general approach, let us now dive into the experiments
+            conducted by the authors.
+            <strong
+              >As previously mentioned, FedAvg aims to address the issue of high
+              communication costs in the traditional FedSGD setting by allowing
+              more local computation before aggregating updates to the central
+              server.</strong
+            >
+            Therefore, the authors have conducted extensive empirical studies to
+            test the effectiveness of this approach, especially under conditions
+            of unbalanced and non-IID data input.
+          </p>
+
+          <h4>MNIST Digit Recognition Task</h4>
+          <ul>
+            <li>
+              <strong>Models:</strong>
+              <ul>
+                <li>
+                  MNIST 2NN: Multilayer-perceptron with two hidden layers, 200
+                  units each, ReLu activations (199,210 total parameters).
+                </li>
+                <li>
+                  CNN Model: Two 5x5 convolution layers (32 and 64 channels),
+                  2x2 max pooling, a fully connected layer with 512 units (ReLu
+                  activation), and a softmax output layer (1,663,370 total
+                  parameters).
+                </li>
+              </ul>
+            </li>
+            <li>
+              <strong>Data Partitioning:</strong>
+              <ul>
+                <li>
+                  IID Partitioning: Data shuffled and partitioned among 100
+                  clients, each with 600 examples.
+                </li>
+                <li>
+                  Non-IID Partitioning: Data sorted by digit label, divided into
+                  200 shards of 300 samples each, distributed to 100 clients (2
+                  shards each).
+                </li>
+              </ul>
+            </li>
+          </ul>
+
+          <h4>Language Modeling with Shakespeare's Works</h4>
+          <ul>
+            <li>
+              <strong>Dataset Construction:</strong> Created from "The Complete
+              Works of William Shakespeare", forming a dataset with 1146
+              clients, each representing a speaking role with at least two
+              lines.
+            </li>
+            <li>
+              <strong>Data Distribution:</strong>
+              <ul>
+                <li>
+                  Substantially unbalanced, with varying line counts among
+                  roles.
+                </li>
+                <li>
+                  Training/Test Sets: First 80% of lines used for training and
+                  last 20% (or at least one line) for testing, following the
+                  chronological order of each play.
+                </li>
+                <li>
+                  IID and Balanced Version: A dataset with balanced and IID
+                  data, maintaining 1146 clients.
+                </li>
+              </ul>
+            </li>
+          </ul>
+
+          <p>
+            Before highlighting FedAvg's remarkable efficiency in reducing
+            communication rounds/costs, please note that the following
+            experiments were all conducted in a setting where <b> C=0.1 </b>,
+            based on previous empirical studies. This setting means that only
+            10% of total clients are involved in these tasks.
+            <strong
+              >To increase computation per client per round, we either decreased
+              B (the local minibatch size), increased E (the number of local
+              epochs), or both.</strong
+            >
+          </p>
+          <figure
+            style="
+              float: left;
+              width: 45%;
+              margin-left: 20px;
+              margin-bottom: 10px;
+              text-align: center;
+            "
+          >
+            <img
+              src="LOCAL-COMPUTATION.png"
+              alt="FedSGD"
+              style="width: 100%"
+              Make
+              the
+              image
+              take
+              the
+              full
+              width
+              of
+              the
+              figure
+              element
+              --
+            />
+          </figure>
+
+          <p>
+            The number of updates per client per round, denoted as \(
+            \boldsymbol{u = \frac{nE}{KB}} \), was increased by varying both E
+            (number of local epochs) and B (local minibatch size).
+          </p>
+
+          <p>
+            When calculating the expected number of updates per client per round
+            ('u'), an average is taken based on the total computational
+            resources and the number of client nodes ('K'), where 'K' is the
+            number of clients involved in learning. Each client may have varying
+            amounts of data, making 'u' a measure of the average computational
+            load per client per round.<strong>
+              However, this doesn't imply equal data distribution among
+              clients.</strong
+            >
+            In practice, the data heterogeneity issue, where data distribution
+            varies significantly among clients, is a crucial consideration in
+            federated learning scenarios.
+          </p>
+          <p>Below are the summary of experiment results:</p>
+
+          <h4>Results on IID Partition of MNIST Data:</h4>
+          <ul>
+            <li>
+              For the IID partition, more computation per client led to
+              significant reductions in the number of rounds required to reach
+              target accuracy:
+            </li>
+            <ul>
+              <li>35 &times; speedup for the CNN model.</li>
+              <li>46 &times; speedup for the 2NN model.</li>
+            </ul>
+          </ul>
+
+          <h4>Results on Non-IID Partition of MNIST Data:</h4>
+          <ul>
+            <li>
+              The non-IID data, which was pathologically partitioned, showed
+              smaller yet substantial speedups (2.8 &minus; 3.7 &times;).
+            </li>
+            <li>
+              This result demonstrated the robustness of the approach, as it was
+              effective even when models were trained on entirely different
+              pairs of digits.
+            </li>
+          </ul>
+
+          <h4>Results on Shakespeare Data (Unbalanced and Non-IID):</h4>
+          <ul>
+            <li>
+              The Shakespeare dataset, representative of real-world applications
+              with unbalanced and non-IID distribution, showed:
+            </li>
+            <ul>
+              <li>
+                A 95 &times; speedup in learning on the non-IID and unbalanced
+                data.
+              </li>
+              <li>A 13 &times; speedup for the balanced IID data.</li>
+            </ul>
+            <li>
+              This suggests that roles with larger local datasets benefited
+              significantly from increased local training.
+              <b>(No rigid proof provided)</b>
+            </li>
+          </ul>
+
+          <p>
+            A point worth noting here is that although FedAvg is effective in
+            balanced, unbalanced, IID, and non-IID data input settings,
+            <strong
+              >the number of communication rounds needed for the non-IID and
+              unbalanced setting still far exceeds the communication cost in
+              balanced and IID settings
+            </strong>
+            (except for the language model task). This remains an ongoing
+            challenge in combating data heterogeneity in the federated learning
+            world.
+          </p>
+          <figure
+            style="
+              float: right;
+              width: 50%;
+              margin-left: 20px;
+              margin-bottom: 10px;
+              text-align: center;
+            "
+          >
+            <img
+              src="MNIST-CNN-ACCURACY.png"
+              alt="FedSGD"
+              style="width: 100%"
+              Make
+              the
+              image
+              take
+              the
+              full
+              width
+              of
+              the
+              figure
+              element
+              --
+            />
+          </figure>
+
+          <p>
+            Having observed the remarkable performance of the FedAvg algorithm
+            in reducing communication costs, it's crucial to also assess the
+            model's performance. This is a key indicator of the effectiveness of
+            federated learning.
+            <strong
+              >After all, it wouldn't be sensible from various perspectives to
+              prioritize privacy preservation at the expense of model
+              performance.</strong
+            >
+          </p>
+          <p>
+            The figures on the right show the performance of a CNN MNIST model
+            under both IID and Non-IID settings. Models with different
+            hyperparameters might have different rates of convergence, but in
+            the end, they show very promising accuracy results.
+          </p>
+          <h4 style="clear: both">
+            <b> Can we over-optimize on the client datasets? </b>
+          </h4>
+
+          <p>
+            Now that we realize more local training epochs can benefit in
+            reducing communication rounds, the question arises: can we make E
+            (the number of local epochs) as large as possible?
+            <b
+              >The experiment shows that for certain tasks, with a very large
+              number of local epochs, FedAvg can plateau or even diverge.</b
+            >
+          </p>
+          <div style="overflow: auto; width: 100%">
+            <figure
+              style="
+                float: left;
+                width: 45%;
+                margin-right: 10px;
+                margin-bottom: 10px;
+                text-align: center;
+              "
+            >
+              <img
+                src="LSTM-LARGE-EPOCHS.png"
+                alt="LSTM Large Epochs"
+                style="width: 100%"
+              />
+
+              <figcaption>LSTM with Large Epochs</figcaption>
+            </figure>
+            <figure
+              style="
+                float: left;
+                width: 40%;
+                margin-left: 10px;
+                margin-bottom: 10px;
+                text-align: center;
+              "
+            >
+              <img
+                src="CNN-LARGE-EPOCHS.png"
+                alt="CNN Large Epochs"
+                style="width: 100%"
+              />
+
+              <figcaption>CNN with Large Epochs</figcaption>
+            </figure>
+          </div>
+          <p>
+            Based solely on the experiments in the paper, it's difficult to
+            assert definitively that an excessively large E will inevitably
+            result in the model's failure to converge. As observed in the
+            figures above, for an LSTM task, a large E did cause the model to
+            diverge, but this was not the case in a CNN task. We believe that
+            there are more nuances and factors that need to be considered when
+            determining the negative effects of a large E on model training.
+          </p>
+
+          <hr style="margin-top: 50px; margin-bottom: 20px" />
+          <h2>Biograpphy</h2>
+          <ol>
+            <li>
+              <strong>Brendan McMahan</strong>
+              <ul>
+                <li>
+                  <strong>Research Field:</strong> Brendan McMahan's research
+                  primarily focuses on machine learning, with a specific
+                  interest in federated learning, privacy-preserving AI, and
+                  distributed algorithms.
+                </li>
+                <li>
+                  <strong>Experience:</strong> McMahan is known for his work at
+                  Google, where he has been a key figure in the development of
+                  federated learning technologies. His contributions have been
+                  instrumental in advancing machine learning techniques that are
+                  both privacy-conscious and efficient for use on decentralized
+                  data.
+                </li>
+              </ul>
+              <div class="center-image">
+                <img src="Brendan.jpeg" alt="Brendan" style="width: 20%" />
+              </div>
+            </li>
+            <li>
+              <strong>Eider Moore</strong>
+              <ul>
+                <li>
+                  <strong>Research Field:</strong> Eider Moore's research
+                  interests are less publicly documented, but their contribution
+                  to this paper suggests a focus on distributed machine learning
+                  and privacy-preserving technologies.
+                </li>
+              </ul>
+            </li>
+            <li>
+              <strong>Daniel Ramage</strong>
+              <ul>
+                <li>
+                  <strong>Research Field:</strong> Daniel Ramage specializes in
+                  natural language processing (NLP) and machine learning, with a
+                  particular interest in applying these technologies in
+                  practical, user-centered contexts.
+                </li>
+                <li>
+                  <strong>Experience:</strong> Ramage has a strong background in
+                  both academia and industry. He has worked on various NLP and
+                  machine learning projects, contributing to the development of
+                  technologies that bridge the gap between theoretical research
+                  and real-world applications.
+                </li>
+              </ul>
+            </li>
+            <li>
+              <strong>Seth Hampson</strong>
+              <ul>
+                <li>
+                  <strong>Research Field:</strong> Seth Hampson's specific
+                  research interests are not widely publicized. However, his
+                  involvement in this paper indicates a focus on distributed
+                  systems and machine learning.
+                </li>
+              </ul>
+            </li>
+            <li>
+              <strong>Blaise Agüera y Arcas</strong>
+              <ul>
+                <li>
+                  <strong>Research Field:</strong> Blaise Agüera y Arcas works
+                  primarily in machine learning, with a strong interest in
+                  neural networks, computational neuroscience, and
+                  human-computer interaction.
+                </li>
+                <li>
+                  <strong>Experience:</strong> Agüera y Arcas is known for his
+                  work at Google, particularly in AI and machine learning. He
+                  has played a significant role in developing innovative
+                  technologies and has been a prominent speaker on topics
+                  related to AI and the intersection of technology and society.
+                </li>
+              </ul>
+            </li>
+          </ol>
+
+          <hr style="margin-top: 50px; margin-bottom: 20px" />
+          <h2>Social Impact</h2>
+          <p>The social implications of this research are significant</p>
+
+          <img
+            style="width: 30%; float: right"
+            src="FL4.jpeg"
+            alt="Federated Learning"
+          />
+          <ul>
+            <li>
+              <strong>Enhanced Privacy Protection:</strong> Enhances user
+              privacy by training models on users' devices without sharing
+              personal data with a central server.
+            </li>
+            <li>
+              <strong>Improved Accessibility of Machine Learning:</strong>
+              Democratizes access to machine learning, allowing model training
+              on devices with limited computational resources.
+            </li>
+            <li>
+              <strong>Advancement in Healthcare:</strong> Facilitates the
+              development of predictive models in healthcare without
+              compromising patient confidentiality.
+            </li>
+
+            <li>
+              <strong>Impact on Consumer Services:</strong> Improves consumer
+              services like recommendation systems and virtual assistants by
+              providing a more tailored user experience.
+            </li>
+            <li>
+              <strong>Challenges in Data Equity:</strong> Raises questions about
+              data equity due to potential bias if the data on local devices
+              isn't representative of the broader population.
+            </li>
+            <li>
+              <strong>Ethical and Regulatory Considerations:</strong> Introduces
+              new ethical considerations and the need for regulations ensuring
+              responsible design and use of federated learning systems.
+            </li>
+          </ul>
+
+          <hr style="margin-top: 50px; margin-bottom: 20px" />
+          <h2>Industry Applications</h2>
+          <p>
+            Following are some examples of real-world implementation of
+            federated learning applications.
+          </p>
+          <ol>
+            <li>
+              <strong>UCSF COVID-19 Modeling:</strong> Used in healthcare at
+              UCSF to predict oxygen levels in COVID-19 patients using
+              decentralized data​​.
+            </li>
+            <li>
+              <strong>Glioblastoma Study:</strong> Global effort involving 6314
+              glioblastoma patients across 71 sites for detecting cancer
+              sub-compartment boundaries​​.
+            </li>
+            <li>
+              <strong>WeBank:</strong> Applied in finance by WeBank for credit
+              rating, combining their data with encrypted invoice data for loan
+              default prediction​​.
+            </li>
+            <li>
+              <strong>Siemens:</strong> Implemented in manufacturing for
+              predictive maintenance and quality control, analyzing data from
+              machinery across multiple plants.
+            </li>
+            <li>
+              <strong>Enershare:</strong> Used in the energy sector for
+              optimizing renewable energy systems, focusing on energy
+              forecasting and grid management.
+            </li>
+          </ol>
+
+          <hr style="margin-top: 50px; margin-bottom: 20px" />
+          <h2>Follow-on Research</h2>
+          <p>
+            Several potential issues have been identified that can hinder the
+            effective implementation of federated learning, and some of these
+            have now become popular open research areas.
+          </p>
+
+          <ol>
+            <li>
+              <strong>Non-IID Data Distribution:</strong> Data in federated
+              learning is typically not identically and independently
+              distributed (non-IID) across the network. This variability can
+              negatively impact the learning process and the performance of the
+              global model.
+              <h5>Strategies for Handling Non-IID Data</h5>
+
+              <h6>1. Algorithmic Adaptation:</h6>
+              <ul>
+                <li>Modify existing algorithms or develop new ones.</li>
+                <li>Adjust hyperparameters to manage diverse datasets.</li>
+              </ul>
+
+              <h6>2. Data Augmentation:</h6>
+              <ul>
+                <li>Create a small, globally shared dataset for uniformity.</li>
+                <li>
+                  Utilize public data sources or non-sensitive client data.
+                </li>
+              </ul>
+
+              <h6>3. Objective Function Optimization:</h6>
+              <ul>
+                <li>
+                  Re-evaluate objective functions considering client diversity.
+                </li>
+                <li>
+                  Introduce limitations and fairness criteria in data
+                  contribution.
+                </li>
+              </ul>
+
+              <h6>4. Single vs. Multi-Model Debate:</h6>
+              <ul>
+                <li>Single global model: Uniformity for all clients.</li>
+                <li>
+                  Multi-model approach: Customized models for each client.
+                </li>
+                <li>Turns non-IID challenge into an advantage.</li>
+              </ul>
+
+              <h6>5. Multi-Model for Independence Violations:</h6>
+              <ul>
+                <li>
+                  Address varying client availability through multiple models.
+                </li>
+                <li>
+                  Example: Different models for clients based on
+                  timezone/longitude (Eichner et al.).
+                </li>
+              </ul>
+            </li>
+            <li>
+              <strong>Unbalanced Data:</strong> The amount of data across
+              devices can be highly unbalanced, leading to skewed model updates
+              and potentially reducing the overall effectiveness of the model.
+            </li>
+            <li>
+              <strong>Limited Communication Bandwidth:</strong> Federated
+              learning is challenged by limited bandwidth for communication
+              between the devices and the central server, which can hinder the
+              process, especially when dealing with large models or many
+              devices.
+            </li>
+            <li>
+              <strong>Devices Heterogeneity:</strong> There is significant
+              heterogeneity in the computational capabilities, storage, and
+              network connectivity of the devices in federated learning, causing
+              challenges in synchronizing and executing the learning process
+              efficiently.
+            </li>
+          </ol>
+          <hr style="margin-top: 50px; margin-bottom: 20px" />
+          <h2>Peer-Review</h2>
+          <h4>Gabriel's review:</h4>
+          <p>
+            This paper presents a clear problem and proposes a clear and
+            straight forward solution. As is with most seminal papers, it lacks
+            real-world validation and does not address real-world obstacles that
+            might occur.
+          </p>
+
+          <h5>Strengths:</h5>
+          <ol>
+            <li>
+              <strong>Innovative Algorithm:</strong> Introduces the
+              FederatedAveraging algorithm, a groundbreaking approach for
+              training models with decentralized data.
+            </li>
+            <li>
+              <strong>Comprehensive Analysis:</strong> Provides a thorough
+              analysis of the algorithm's performance, particularly in scenarios
+              with non-IID (non-identically distributed) and unbalanced data.
+            </li>
+            <li>
+              <strong>Significant Communication Efficiency:</strong>
+              Demonstrates substantial reductions in the amount of data that
+              needs to be communicated, which is crucial for federated learning.
+            </li>
+          </ol>
+          <h5>Weaknesses:</h5>
+          <ol>
+            <li>
+              <strong>Experimental Limitations:</strong> The experiments
+              primarily focus on a limited set of models and datasets, which may
+              not fully represent the diversity of real-world applications.
+            </li>
+            <li>
+              <strong>Potential Scalability Concerns:</strong> While the
+              algorithm is effective in the scenarios tested, its scalability
+              and effectiveness in larger, more complex environments are not
+              extensively explored.
+            </li>
+            <li>
+              <strong>Omitted Aspects of Federated Learning:</strong> The paper
+              focuses predominantly on communication efficiency, potentially
+              overlooking other critical aspects like privacy, security, and
+              data heterogeneity.
+            </li>
+          </ol>
+
+          <h4>Zhongwei's review:</h4>
+          <p>
+            <strong>Overall Impression:</strong> The paper contributes
+            significantly to federated learning, particularly in its practical
+            application in reducing communication cost. However, its impact is
+            somewhat limited by the lack of comprehensive theoretical analysis
+            and an oversimplified approach to model complexity. Future research
+            could benefit from a more rigorous theoretical foundation and
+            comparative studies between traditional and federated learning
+            frameworks.
+          </p>
+
+          <h5>Pros:</h5>
+          <ul>
+            <li>
+              <strong>Comprehensive Empirical Evaluation:</strong> Thorough
+              empirical evaluation of the proposed algorithm, offering valuable
+              insights.
+            </li>
+            <li>
+              <strong>Democratizing Distributed Learning:</strong> Extends
+              application from data clusters to end-user devices, addressing
+              unbalanced and non-IID data issues.
+            </li>
+            <li>
+              <strong>Feasibility in Simple Lab Setting:</strong> Demonstrates
+              the technique's feasibility in a controlled environment,
+              establishing a foundation for further research.
+            </li>
+          </ul>
+
+          <h5>Cons:</h5>
+          <ul>
+            <li>
+              <strong>Lack of Rigid Theoretical Analysis:</strong> Over-reliance
+              on conjecture rather than rigorous analytical backing.
+            </li>
+            <li>
+              <strong>Oversimplified Model Complexity:</strong> Utilizes simple
+              models that do not adequately reflect real-world application
+              complexity.
+            </li>
+            <li>
+              <strong>Unclear Aggregation Methodology:</strong> Lacks clarity in
+              discussing the weighted averaging aggregation, leading to
+              confusion about the methods used in experiments.
+            </li>
+            <li>
+              <strong>Absence of Comparative Analysis:</strong> Misses the
+              opportunity to compare traditional ML settings with federated
+              learning settings.
+            </li>
+            <li>
+              <strong>Distraction with Model Initialization:</strong> Misplaced
+              discussion on model initialization, especially given the context
+              of a shared model in federated settings.
+            </li>
+          </ul>
+
+          <hr style="margin-top: 50px; margin-bottom: 20px" />
+          <h2>Code Implementation</h2>
+          <p>
+            The primary objective of this code implementation is to demonstrate
+            the efficacy of the FedAvg algorithm in reducing communication costs
+            within a federated learning framework. This process comprises three
+            key components:
+          </p>
+          <p>
+            <a
+              href="https://colab.research.google.com/drive/1LIyYtxJQ5UTt9A95EvAfDNyz_blUF9X5?usp=sharing#scrollTo=egkDpRSiPyWY"
+              >Please Explore our Federated Averaging Experiment Colab
+              Notebook</a
+            >
+          </p>
+          <ol>
+            <li>
+              <strong>Training a Sentiment Analysis Model:</strong> Using
+              vanilla stochastic gradient descent (SGD) optimization, applied
+              outside a federated learning context. The purpose of this step is
+              to establish a baseline model performance for subsequent
+              experiments in FL settings.
+            </li>
+            <li>
+              <strong>Training with FedSGD Algorithm:</strong> Utilizing the
+              FedSGD algorithm (setting E = 1, B = size of local data), which
+              involves performing a single batch gradient calculation per
+              communication round. In this case, as the minibatch size matches
+              the local dataset size, one batch is equivalent to one epoch in
+              the FedSGD framework.
+            </li>
+            <li>
+              <strong>Training with FedAvg Algorithm:</strong> Implementing the
+              FedAvg algorithm (with E=5 and B=50), where more computation is
+              executed locally. This represents a significant advancement of the
+              algorithm, especially in addressing the high communication
+              requirements typical of algorithms like FedSGD.
+            </li>
+          </ol>
+          <p>
+            Note that due to resource constraints, only the vanilla SGD and
+            FedAvg algorithm experiment has been completed, which required hours
+            of training. As the FedSGD algorithm is expected to take
+            significantly more time due to its high communication costs in the
+            federated learning setting—possibly more than an order of magnitude
+            compared to FedAvg—its experiment has been delayed.
+          </p>
+          <h5><b>Dataset preparation </b></h5>
+          <p>
+            This study utilizes the
+            <a
+              href="https://www.kaggle.com/datasets/omkarsabnis/yelp-reviews-dataset"
+              >YelpReview Sentiment Analysis dataset</a
+            >, which contains 10,000 Yelp reviews, each with review content and
+            rating stars. The primary task is to predict the rating stars
+            (ranging from 1 to 5) based on the review content.
+          </p>
+          <p>
+            The datasets for the three models mentioned are prepared as follows,
+            with each dataset first undergoing tokenization and padding before
+            splitting:
+          </p>
+          <ol>
+            <li>
+              <strong>Vanilla SGD:</strong> The entire dataset is divided into
+              80% for training and 20% for testing with minibatch size of 100.
+            </li>
+            <li>
+              <strong>FedSGD:</strong> The dataset is split into 10 shards,
+              converted into 10 dataloaders with a batch size equal to the
+              number of data points per shard, resulting in one batch per
+              dataloader.
+            </li>
+            <li>
+              <strong>FedAvg:</strong> Similar to FedSGD, the dataset is divided
+              into 10 shards, but with a minibatch size of 50.
+            </li>
+          </ol>
+          <p>
+            For both FedSGD and FedAvg models, to emulate non-IID and unbalanced
+            data conditions, the raw dataset is sorted into classes before being
+            divided into shards, with each shard containing varying numbers of
+            data examples.
+          </p>
+          <h5><b>Results</b></h5>
+          <p>
+            The Vanilla SGD model aims to establish a baseline performance for
+            this sentiment analysis task, because the three models share a same
+            network architecture. After training for 100 epochs, we clearly
+            observe overfitting, and the val accuracy of around 40% is not
+            considered good. However, this will serve as the benchmark for the
+            FedAvg and FedSGD experiments. Specifically, we will examine how
+            many communication rounds it takes for both FedAvg and FedSGD to
+            reach this threshold.
+          </p>
+
+          <img src="vanilla_sgd.png" alt="vanilla_sgd" style="width: 80%" />
+
+          <h6><b>FedAvg Experiment Results</b></h6>
+          <p>
+            The experimental results presented in the paper were not
+            successfully replicated in our code implementation, primarily due to
+            time and computational constraints. The FedAvg algorithm ran for 4
+            hours over 238 rounds for each of the 10 clients and achieved an
+            accuracy of 25.458%. The training was intentionally interrupted due
+            to computational limits. We are eager to continue this experiment in
+            the future. Despite these challenges, the notebook still merits
+            examination. Any feedback is welcomed!
+          </p>
+          <img src="FedAvg_result.png" alt="vanilla_sgd" style="width: 80%" />
+
+          <br />
+
+          <hr style="margin-top: 50px; margin-bottom: 20px" />
+          <h2>Conclusion</h2>
+          <p>
+            The FedAvg algorithm is a cornerstone in federated learning,
+            addressing both the efficiency of model training in decentralized
+            environments and the privacy concerns associated with data sharing.
+            Its design and implementation have opened up new possibilities in
+            the application of machine learning models, especially in scenarios
+            where data privacy and communication efficiency are paramount.
+            However, the FedAvg algorithm is not without its limitations. It
+            still faces challenges from data heterogeneity and system
+            heterogeneity, which are obstacles that impede this technology from
+            being widely adopted in real-world applications. Nevertheless, these
+            limitations also open up new research directions in large-scale
+            machine learning systems.
+          </p>
+
+          <hr style="margin-top: 50px; margin-bottom: 20px" />
+          <h3>References</h3>
+
+          <p>
+            <a name="reference-1">[i]</a>
+            <a href="https://arxiv.org/abs/1912.04977v3">arXiv:1912.04977v3.</a>
+          </p>
+          <p>
+            <a name="reference-2">[ii]</a>
+            <a href="https://dl.acm.org/doi/10.1145/3414045.3415949"
+              >https://dl.acm.org/doi/10.1145/3414045.3415949.</a
+            >
+          </p>
+          <p>
+            <a name="reference-3">[iii]</a>
+            <a href="https://www.mdpi.com/1424-8220/21/13/4586"
+              >https://www.mdpi.com/1424-8220/21/13/4586.</a
+            >
+          </p>
+          <p>
+            <a name="reference-4">[iv]</a>
+            <a href="https://doi.org/10.1038/s41591-021-01506-3"
+              >https://doi.org/10.1038/s41591-021-01506-3.</a
+            >
+          </p>
+          <p>
+            <a name="reference-5">[v]</a>
+            <a href="https://www.mdpi.com/2076-3417/11/23/11191"
+              >https://www.mdpi.com/2076-3417/11/23/11191.</a
+            >
+          </p>
+          <p>
+            <a name="reference-6">[vi]</a>
+            <a
+              href="https://mlcommons.org/2023/07/announcing-medperf-open-benchmarking-platform-for-medical-ai/"
+              >https://mlcommons.org/2023/07/announcing-medperf-open-benchmarking-platform-for-medical-ai/.</a
+            >
+          </p>
+          <p>
+            <a name="reference-7">[vii]</a>
+            <a href="https://arxiv.org/abs/1901.06455"
+              >https://arxiv.org/abs/1901.06455.</a
+            >
+          </p>
+          <p>
+            <a name="reference-8">[viii]</a>
+            <a href="https://arxiv.org/abs/2202.01141"
+              >https://arxiv.org/abs/2202.01141.</a
+            >
+          </p>
+
+          <p>
+            <a name="reference-9">[ix]</a>
+            <a
+              href="https://intelligentimaging.ucsf.edu/news/lessons-learned-real-world-federated-learning-experience-covid-19-modeling-ucsf"
+              >https://intelligentimaging.ucsf.edu/news/lessons-learned-real-world-federated-learning-experience-covid-19-modeling-ucsf</a
+            >
+          </p>
+
+          <p>
+            <a name="reference-10">[x]</a>
+            <a href="https://www.nature.com/articles/s41467-022-33407-5"
+              >https://www.nature.com/articles/s41467-022-33407-5</a
+            >
+          </p>
+
+          <p>
+            <a name="reference-11">[xi]</a>
+            <a href="https://www.digfingroup.com/webank-clustar/"
+              >https://www.digfingroup.com/webank-clustar/</a
+            >
+          </p>
+
+          <p>
+            <a name="reference-12">[xii]</a>
+            <a
+              href="https://www.siemens.com/global/en/products/automation/topic-areas/artificial-intelligence-in-industry/whitepaper-federated-learning-in-the-industry.html"
+              >https://www.siemens.com/global/en/products/automation/topic-areas/artificial-intelligence-in-industry/whitepaper-federated-learning-in-the-industry.html</a
+            >
+          </p>
+
+          <p>
+            <a name="reference-13">[xiii]</a>
+            <a href="https://enershare.eu/about/"
+              >https://enershare.eu/about/</a
+            >
+          </p>
+          <h2>Team Members</h2>
+
+          <p>Gabriel Cuchacovich</p>
+          <p>Zhongwei Zhang</p>
+        </div>
+        <!--col-->
+      </div>
+      <!--row -->
+    </div>
+    <!-- container -->
+
+    <footer class="nd-pagefooter">
+      <div class="row">
+        <div class="col-6 col-md text-center">
+          <a href="https://cs7150.baulab.info/">About CS 7150</a>
+        </div>
+      </div>
+    </footer>
+  </body>
+  <script>
+    $(document).on("click", ".clickselect", function (ev) {
+      var range = document.createRange();
+      range.selectNodeContents(this);
+      var sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+    });
+    // Google analytics below.
+    window.dataLayer = window.dataLayer || [];
+  </script>
+</html>
