@@ -48,8 +48,8 @@ The Vanilla SGD model aims to establish a baseline performance for this sentimen
 
 ### FedAvg Experiment Results
 
-The experimental results presented in the paper were not successfully replicated in our code implementation, primarily due to time and computational constraints. The FedAvg algorithm ran for 4 hours over 238 rounds for each of the 10 clients and achieved an accuracy of 25.458%. The training was intentionally interrupted due to computational limits. We are eager to continue this experiment in the future. Despite these challenges, the notebook still merits examination. Any feedback is welcomed!
+The experimental results presented in the paper were not successfully replicated in the code implementation, primarily due to time and computational constraints. The FedAvg algorithm ran for 4 hours over 238 rounds for each of the 10 clients and achieved an accuracy of 25.458%. The training was intentionally interrupted due to computational limits. We are eager to continue this experiment in the future. Despite these challenges, the notebook still merits examination. Any feedback is welcomed!
 
 ![Local Image](./images/fedavg.png)
 
-> **Please Explore our Federated Averaging Experiment Colab Notebook**
+> **Please Explore the Federated Averaging Experiment Colab Notebook**
