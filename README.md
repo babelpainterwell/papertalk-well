@@ -1,6 +1,6 @@
 ## TRY MY PRODUCT!
 
-https://papertalk-well.vercel.app/
+https://papertalk-well.vercel.app/ (Server down found on Fev 29, 2024, maintaining...)
 
 **You can check the Preview below under Motivation section**
 
