@@ -1,8 +1,12 @@
 ## TRY MY PRODUCT!
 
-https://papertalk-well.vercel.app/ (Server down found on Feb 29, 2024, possibly due to openai quota limit, maintaining...)
+https://papertalk-well.vercel.app/
 
-**You can check the Preview below under Motivation section**
+**Maintainance Logs**
+
+- Feb 29, 2024: exceeded OpenAI quota limit and new Clerk privacy polocy was updated; Status: resolved.
+
+**You can check the Preview (screenshots) of my website below under Motivation section**
 
 ## Introduction
 
