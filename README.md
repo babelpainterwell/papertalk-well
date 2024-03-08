@@ -2,7 +2,7 @@
 
 https://papertalk-well.vercel.app/
 
-**Maintainance Logs**
+**Maintenance Logs**
 
 - Feb 29, 2024: exceeded OpenAI quota limit and new Clerk privacy polocy was updated; Status: resolved.
 
